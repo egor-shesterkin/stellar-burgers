@@ -4,14 +4,7 @@ import { getOrdersApi } from '@api';
 
 export const getUserOrders = createAsyncThunk(
   'userOrders/getAll',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getOrdersApi();
-      return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch user orders');
-    }
-  }
+  getOrdersApi
 );
 
 type TUserOrdersState = {
@@ -47,7 +40,7 @@ const userOrdersSlice = createSlice({
       })
       .addCase(getUserOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || 'Failed to fetch user orders';
       });
   }
 });

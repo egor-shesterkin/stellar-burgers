@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
@@ -10,8 +10,11 @@ import { Preloader } from '@ui';
 export const ProfileOrders: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { orders, loading, error } = useSelector((store) => store.userOrders);
   const { user } = useSelector((store) => store.auth);
+
+  const background = location.state?.background;
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -21,10 +24,10 @@ export const ProfileOrders: FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (user && !loading && orders.length === 0) {
+    if (user && !loading && orders.length === 0 && !background) {
       dispatch(getUserOrders());
     }
-  }, [dispatch, user, loading, orders.length]);
+  }, [dispatch, user, loading, orders.length, background]);
 
   if (!user) {
     return <Preloader />;

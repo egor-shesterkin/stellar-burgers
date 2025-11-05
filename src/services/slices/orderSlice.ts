@@ -1,12 +1,16 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { orderBurgerApi } from '@api';
+import { clearConstructor } from './constructorSlice';
 
 export const createOrder = createAsyncThunk(
   'order/create',
-  async (ingredients: string[], { rejectWithValue }) => {
+  async (ingredients: string[], { dispatch, rejectWithValue }) => {
     try {
       const response = await orderBurgerApi(ingredients);
+
+      dispatch(clearConstructor());
+
       return response.order;
     } catch (error) {
       return rejectWithValue(error);

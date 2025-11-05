@@ -1,14 +1,19 @@
-import { FC, useState, SyntheticEvent } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { forgotPasswordApi } from '@api';
 import { ForgotPasswordUI } from '@ui-pages';
+import { useForm } from '../../hooks/useForm';
 
 export const ForgotPassword: FC = () => {
-  const [email, setEmail] = useState('');
   const [error, setError] = useState<Error | null>(null);
-
   const navigate = useNavigate();
+
+  const [form, handleChange] = useForm({
+    email: ''
+  });
+
+  const { email } = form;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -24,9 +29,9 @@ export const ForgotPassword: FC = () => {
 
   return (
     <ForgotPasswordUI
-      errorText={error?.message}
+      errorText={error?.message || ''}
       email={email}
-      setEmail={setEmail}
+      setEmail={handleChange}
       handleSubmit={handleSubmit}
     />
   );

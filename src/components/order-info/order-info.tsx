@@ -1,5 +1,5 @@
-import { FC, useMemo, useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { FC, useMemo, useEffect, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
@@ -8,14 +8,31 @@ import { getOrderByNumberApi } from '@api';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
+  const location = useLocation();
   const ingredients = useSelector((store) => store.ingredients.ingredients);
+
+  const { orders: userOrders } = useSelector((store) => store.userOrders);
+  const { orders: feedOrders } = useSelector((store) => store.feed);
+
   const [orderData, setOrderData] = useState<TOrder | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (!number || hasFetched.current) {
+    if (!number) {
+      setLoading(false);
+      return;
+    }
+
+    const orderNumber = parseInt(number, 10);
+
+    const existingOrder = location.pathname.includes('/profile/orders')
+      ? userOrders.find((order) => order.number === orderNumber)
+      : feedOrders.find((order) => order.number === orderNumber);
+
+    if (existingOrder) {
+      setOrderData(existingOrder);
+      setLoading(false);
       return;
     }
 
@@ -24,7 +41,6 @@ export const OrderInfo: FC = () => {
         setLoading(true);
         setError(null);
 
-        const orderNumber = parseInt(number, 10);
         const response = await getOrderByNumberApi(orderNumber);
 
         if (response.orders && response.orders.length > 0) {
@@ -40,8 +56,7 @@ export const OrderInfo: FC = () => {
     };
 
     fetchOrder();
-    hasFetched.current = true;
-  }, [number]);
+  }, [number, location.pathname, userOrders, feedOrders]);
 
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) {

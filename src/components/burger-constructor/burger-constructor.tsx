@@ -4,7 +4,6 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
 import { createOrder, clearOrder } from '../../services/slices/orderSlice';
-import { clearConstructor } from '../../services/slices/constructorSlice';
 import { getUserOrders } from '../../services/slices/userOrdersSlice';
 
 export const BurgerConstructor: FC = () => {
@@ -34,9 +33,8 @@ export const BurgerConstructor: FC = () => {
 
   const closeOrderModal = () => {
     dispatch(clearOrder());
-    if (order) {
-      dispatch(clearConstructor());
 
+    if (order) {
       setTimeout(() => {
         dispatch(getUserOrders());
       }, 1000);
