@@ -29,7 +29,7 @@ export const ResetPassword: FC = () => {
 
   return (
     <ResetPasswordUI
-      errorText={error?.message}
+      errorText={error?.message || ''}
       password={password}
       token={token}
       setPassword={setPassword}
