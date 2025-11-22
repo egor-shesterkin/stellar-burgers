@@ -43,7 +43,7 @@ const feedSlice = createSlice({
       })
       .addCase(getFeeds.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch feeds';
+        state.error = action.error?.message || 'Failed to fetch feeds';
       });
   }
 });
