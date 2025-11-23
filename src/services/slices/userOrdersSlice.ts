@@ -40,7 +40,7 @@ const userOrdersSlice = createSlice({
       })
       .addCase(getUserOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch user orders';
+        state.error = action.error?.message || 'Failed to fetch user orders';
       });
   }
 });
