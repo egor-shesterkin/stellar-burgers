@@ -49,6 +49,12 @@ describe('Burger Constructor', () => {
       // check that the page contains text from mock
 
       // Check for bun names
+      cy.get('[data-ingredient-type=bun]')
+        .contains('Краторная булка')
+        .should('exist');
+      cy.get('[data-ingredient-type=bun]')
+        .contains('Флюоресцентная булка')
+        .should('exist');
       cy.contains('Краторная булка').should('exist');
       cy.contains('Флюоресцентная булка').should('exist');
 
@@ -84,7 +90,6 @@ describe('Burger Constructor', () => {
     it('should add a single main ingredient to constructor', () => {
       // Click mains tab and wait for scroll
       cy.contains('Начинки').click({ force: true });
-      cy.wait(1000); // waiting for scroll
 
       // Find a main ingredient by its content (not a bun, not a sauce)
       cy.get('[data-testid=ingredient-item]').then(($ingredients) => {
@@ -142,7 +147,6 @@ describe('Burger Constructor', () => {
 
       // Add a main ingredient
       cy.contains('Начинки').click({ force: true });
-      cy.wait(1000);
 
       // Find and add a main ingredient
       cy.get('[data-testid=ingredient-item]').then(($ingredients) => {
@@ -309,7 +313,6 @@ describe('Burger Constructor', () => {
 
       // Add a main ingredient
       cy.contains('Начинки').click({ force: true });
-      cy.wait(1000);
 
       cy.get('[data-testid=ingredient-item]').then(($ingredients) => {
         let mainAdded = false;
